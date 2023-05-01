@@ -1,0 +1,13 @@
+@use './breackpoints' as *;
+
+@mixin grid-template {
+  grid-template-columns: 52.3% 10% repeat(4, 8%) 5%;
+
+  @include media('<huge', '>=large') {
+    grid-template-columns: 33% 14% repeat(4, 11.7%) 5%;
+  }
+
+  @include media('<large', '>=medium') {
+    grid-template-columns: 27.6rem 18.1rem repeat(4, 15rem) 8.9rem;
+  }
+}

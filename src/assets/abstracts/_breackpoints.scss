@@ -1,0 +1,7 @@
+$breakpoints: (
+        small: 360px,
+        medium: 768px,
+        large: 1366px,
+        huge: 1920px) !default;
+
+@import 'include-media';

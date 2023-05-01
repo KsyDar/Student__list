@@ -1,0 +1,59 @@
+@use "../abstracts/colors" as *;
+@import "../fonts";
+
+* {
+  box-sizing: border-box;
+}
+
+svg {
+  fill: currentColor;
+}
+
+:root {
+  --black: #1C1D1F;
+  --medium: #8D9FB7;
+  --blue-dark: #004199;
+  --white: #FFFFFF;
+  --blue: #006CFE;
+  --blue-05: #80B6FF;
+  --blue-light: #D5E7FF;
+  --blue-super-light: #EDF5FF;
+  --green: #01AA88;
+  --red: #FF0000;
+  --orange: #FFA200;
+}
+
+html {
+  font-size: 62.5%;
+  width: 100vw;
+  height: 100vh;
+}
+
+body {
+  max-width: 100%;
+  margin: 0;
+  background: $blue-super-light;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+h1 {
+  margin: 0;
+}
+
+input {
+  border: none;
+
+  &:focus-visible {
+    outline: none;
+  }
+}
