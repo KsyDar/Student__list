@@ -1,9 +1,9 @@
 <template>
-    <div class="app-body">
+    <main class="app-body">
         <h1 class="app-body__title">Список заявлений</h1>
         <UISearcher v-model="searchText" @change="search" />
         <StudentTable :students="foundStudents" />
-    </div>
+    </main>
 </template>
 
 <script>

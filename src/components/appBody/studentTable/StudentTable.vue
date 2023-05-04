@@ -1,41 +1,43 @@
-<template class="student-table">
-    <UITable :items="sortedStudents">
-        <UITableCol v-for="col of columns"
-                    :key="col.id"
-                    :filterFunction="col.filter"
-                    :filter="col.field === firstSelectedFilter.field ? firstSelectedFilter.filter : 0"
-                    :field="col.field"
-                    :title="col.title"
-        >
-            <template #title="{ changeFilter, filter }">
-                <div @click="setFilter(col, changeFilter)" class="student-table__header">
-                    <span>{{ col.title }}</span>
-                    <ArrowIcon v-if="filter !== 0" :class="{'rotated' : filter === 2}"/>
-                </div>
-            </template>
-            <template #content="item">
-                <div v-if="col.field === 'percent'" class="student-table__item student-table__item--percent">
-                    <div class="percentage"
-                         :style="stylesPercent(item[col.field], col.field)"
-                    />
-                    <span>
+<template>
+    <section class="student-table">
+        <UITable :items="sortedStudents">
+            <UITableCol v-for="col of columns"
+                        :key="col.id"
+                        :filterFunction="col.filter"
+                        :filter="col.field === firstSelectedFilter.field ? firstSelectedFilter.filter : 0"
+                        :field="col.field"
+                        :title="col.title"
+            >
+                <template #title="{ changeFilter, filter }">
+                    <div @click="setFilter(col, changeFilter)" class="student-table__header">
+                        <span>{{ col.title }}</span>
+                        <ArrowIcon v-if="filter !== 0" :class="{'rotated' : filter === 2}"/>
+                    </div>
+                </template>
+                <template #content="item">
+                    <td v-if="col.field === 'percent'" class="student-table__item student-table__item--percent">
+                        <div class="percentage"
+                             :style="stylesPercent(item[col.field], col.field)"
+                        />
+                        <span>
                             {{ item[col.field] }}%
-                    </span>
-                </div>
+                        </span>
+                    </td>
 
-                <div v-else-if="col.field === 'date'" class="student-table__item">
-                    {{ item[col.field].split('-').reverse().join('.') }}
-                </div>
+                    <td v-else-if="col.field === 'date'" class="student-table__item">
+                        {{ item[col.field].split('-').reverse().join('.') }}
+                    </td>
 
-                <div v-else
-                     class="student-table__item"
-                     :style="getTextColor(item[col.field], col.field)"
-                >
-                    {{ item[col.field] }}
-                </div>
-            </template>
-        </UITableCol>
-    </UITable>
+                    <td v-else
+                         class="student-table__item"
+                         :style="getTextColor(item[col.field], col.field)"
+                    >
+                        {{ item[col.field] }}
+                    </td>
+                </template>
+            </UITableCol>
+        </UITable>
+    </section>
 </template>
 
 <script>
@@ -211,9 +213,12 @@ export default {
     --text-color: #000;
 
     padding: 2.35rem 2rem;
-    background-color: $white;
     transition: background-color .2s ease-in-out;
     color: var(--text-color);
+
+    @include media('>medium') {
+      background-color: $white;
+    }
 
     @include media('<medium') {
       padding: 0;

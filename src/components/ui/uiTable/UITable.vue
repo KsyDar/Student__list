@@ -79,15 +79,17 @@ export default {
          * @param column Колонка
          */
         changeFilter(column) {
-            return () => {
-                this.cols = this.cols.map(col => {
-                    if (col.id !== column.id) {
-                        col.filter = 0
-                    }
-                    return col
-                })
-                column.filter = (column.filter + 1) % 3
-                return column.filter
+            if (this.width > 768) {
+                return () => {
+                    this.cols = this.cols.map(col => {
+                        if (col.id !== column.id) {
+                            col.filter = 0
+                        }
+                        return col
+                    })
+                    column.filter = (column.filter + 1) % 3
+                    return column.filter
+                }
             }
         },
         /** Обновление ширины окна браузера */
@@ -96,16 +98,17 @@ export default {
         },
     },
     render(createElement) {
-        let table = []
         /** Создание заголовков колонок */
         const headersSlots = []
+        const headerTag = this.width <= 768 ? 'td' : 'th'
+        const headerClass = this.width <= 768 ? 'ui-table__content-cell' : 'ui-table__header-item'
         for (const col of this.cols) {
             if (col.titleSlot !== undefined) {
-                headersSlots.push(createElement("div", {class: 'ui-table__header-item'}, [
+                headersSlots.push(createElement(headerTag, {class: headerClass}, [
                     col.titleSlot({changeFilter: this.changeFilter(col), filter: col.filter})
                 ]))
             } else {
-                headersSlots.push(createElement("div",
+                headersSlots.push(createElement(headerTag,
                     {
                         class: 'ui-table__header-item',
                         props: {changeFilter: this.changeFilter(col), filter: col.filter},
@@ -116,7 +119,7 @@ export default {
             }
         }
         /** Заголовки колонок */
-        const headers = createElement("div", {class: 'ui-table__header'}, headersSlots)
+        const headers = createElement("thead", {class: 'ui-table__header'}, headersSlots)
         /** Создание селекта для фильтрации элементов */
         const select = createElement(UISelect, {
             props: {
@@ -146,6 +149,7 @@ export default {
         })
         /** Создание строк таблицы */
         const rows = []
+        let contentTag = ''
         for (const item of this.filteredItems) {
             const columns = []
             const data = []
@@ -153,31 +157,31 @@ export default {
                 if (this.width > 768) {
                     columns.push(this.cols[col].contentSlot(item))
                 } else {
-                    data.push(createElement("div",
-                        {class: 'ui-table__body-row-data'},
+                    data.push(createElement("tr",
+                        {class: 'ui-table__content-row'},
                         [headersSlots[col], this.cols[col].contentSlot(item)]
                     ))
                 }
             }
             if (this.width > 768) {
-                rows.push(createElement("div", {class: 'ui-table__body-row'}, columns))
+                rows.push(createElement("tr", {class: 'ui-table__body-row'}, columns))
+                contentTag = 'tbody'
             } else {
-                rows.push(createElement("div", {class: 'ui-table__body-row'}, data))
+                rows.push(createElement("table", {class: 'ui-table__content-item'}, data))
+                contentTag = 'div'
             }
         }
         /** Контент таблицы - массив строк */
-        const content = createElement("div", {class: 'ui-table__body'}, rows)
+        const contentClass = this.width <= 768 ? 'ui-table__content' : 'ui-table__body'
+        const content = createElement(contentTag, {class: contentClass}, rows)
 
-        if (this.width <= 768) {
-            table = [select, content]
-        } else {
-            table = [headers, content]
-        }
+        const uiTable = this.width <= 768 ? [select, content] : [headers, content]
+        const componentTag = this.width <= 768 ? 'div' : 'table'
 
         return createElement(
-            "div",
+            componentTag,
             {class: 'ui-table'},
-            table
+            uiTable
         )
     }
 }
@@ -190,6 +194,8 @@ export default {
 @use "../../../assets/abstracts/breackpoints" as *;
 
 .ui-table {
+  display: block;
+
   @include media('<large', '>=medium') {
     max-width: 1286px;
     overflow: auto;
@@ -223,14 +229,6 @@ export default {
       margin-left: 2rem;
       cursor: pointer;
 
-      @include media('<medium') {
-        cursor: default;
-        width: 60%;
-        margin: 0;
-        display: flex;
-        justify-content: flex-start;
-      }
-
       & + & {
         display: flex;
         justify-content: center;
@@ -250,30 +248,49 @@ export default {
       color: var(--color);
       cursor: pointer;
 
-      @include media('>medium') {
-        &:hover > div[class] {
-          background-color: $blue-super-light;
-        }
+      &:hover {
+        background-color: $blue-light;
       }
 
-      @include media('<medium') {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        background-color: $white;
-        margin-bottom: .8rem;
-        cursor: default;
+      &:hover > td {
+        background-color: $blue-super-light;
+      }
+    }
+  }
+
+  &__content {
+    &-item {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background-color: $white;
+      margin-bottom: .8rem;
+      cursor: default;
+    }
+
+    &-row {
+      @include normal-text;
+      color: var(--color);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: .8rem 1.2rem;
+
+      & + & {
+        border-top: 1px solid $blue-light;
       }
 
-      &-data {
-        display: flex;
-        align-items: center;
-        padding: .8rem 1.2rem;
-
-        & + & {
-          border-top: 1px solid $blue-light;
-        }
+      &:hover {
+        background-color: $blue-super-light;
       }
+    }
+
+    &-cell {
+      cursor: default;
+      width: 60%;
+      margin: 0;
+      display: flex;
+      justify-content: flex-start;
     }
   }
 }

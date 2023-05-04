@@ -136,6 +136,7 @@ export default {
     position: absolute;
     left: 0;
     top: 50px;
+    z-index: 9999;
     background-color: $white;
     border: 1px solid $blue-light;
     border-radius: 4px;

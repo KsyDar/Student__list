@@ -1,5 +1,5 @@
 <template>
-    <div class="app-header">
+    <header class="app-header">
         <div class="app-header__logo">
             <TableLogo class="app-header__icon" />
             <p class="app-header__title">Система таблиц</p>
@@ -14,7 +14,7 @@
                 <img src="../../assets/images/profile.png" alt="">
             </div>
         </div>
-    </div>
+    </header>
 </template>
 
 <script>
